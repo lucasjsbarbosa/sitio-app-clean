@@ -3,6 +3,28 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import './App.css';
 
 function App() {
+  // Função segura para localStorage
+  const safeStorage = {
+    getItem: (key, defaultValue = null) => {
+      try {
+        const value = localStorage.getItem(key);
+        return value !== null ? value : defaultValue;
+      } catch (error) {
+        console.warn('localStorage não disponível:', error);
+        return defaultValue;
+      }
+    },
+    setItem: (key, value) => {
+      try {
+        localStorage.setItem(key, value);
+        return true;
+      } catch (error) {
+        console.warn('localStorage não disponível:', error);
+        return false;
+      }
+    }
+  };
+
   // Estados para armazenar os dados
   const [reservations, setReservations] = useState([]);
   const [expenses, setExpenses] = useState([]);
@@ -34,9 +56,9 @@ function App() {
   // Carregar dados do localStorage quando o componente iniciar
   useEffect(() => {
     try {
-      const savedReservations = localStorage.getItem('reservations');
-      const savedExpenses = localStorage.getItem('expenses');
-      const savedDarkMode = localStorage.getItem('darkMode');
+      const savedReservations = safeStorage.getItem('reservations');
+      const savedExpenses = safeStorage.getItem('expenses');
+      const savedDarkMode = safeStorage.getItem('darkMode');
       
       if (savedReservations) setReservations(JSON.parse(savedReservations));
       if (savedExpenses) setExpenses(JSON.parse(savedExpenses));
@@ -50,7 +72,7 @@ function App() {
   // Salvar dados no localStorage quando houver alterações
   useEffect(() => {
     try {
-      localStorage.setItem('reservations', JSON.stringify(reservations));
+      safeStorage.setItem('reservations', JSON.stringify(reservations));
     } catch (error) {
       console.log('Erro ao salvar reservas:', error);
     }
@@ -58,7 +80,7 @@ function App() {
   
   useEffect(() => {
     try {
-      localStorage.setItem('expenses', JSON.stringify(expenses));
+      safeStorage.setItem('expenses', JSON.stringify(expenses));
     } catch (error) {
       console.log('Erro ao salvar despesas:', error);
     }
@@ -66,7 +88,7 @@ function App() {
   
   useEffect(() => {
     try {
-      localStorage.setItem('darkMode', JSON.stringify(darkMode));
+      safeStorage.setItem('darkMode', JSON.stringify(darkMode));
     } catch (error) {
       console.log('Erro ao salvar modo escuro:', error);
     }

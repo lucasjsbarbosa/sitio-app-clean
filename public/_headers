@@ -1,3 +1,11 @@
-/*
+/*.js
   Content-Type: text/javascript
-  X-Content-Type-Options: nosniff
+
+/*.jsx
+  Content-Type: text/javascript
+
+/*.css
+  Content-Type: text/css
+
+/*.html
+  Content-Type: text/html
