@@ -363,19 +363,24 @@ function App() {
   };
 
   const thStyles = {
-    padding: '0.5rem 1rem',
+    padding: '0.5rem 0.5rem',
     textAlign: 'left',
     backgroundColor: darkMode ? '#374151' : '#f3f4f6',
-    fontWeight: '600'
+    fontWeight: '600',
+    fontSize: '0.875rem'
   };
 
   const tdStyles = {
-    padding: '0.5rem 1rem',
-    borderTop: `1px solid ${darkMode ? '#4b5563' : '#e5e7eb'}`
+    padding: '0.5rem 0.5rem',
+    borderTop: `1px solid ${darkMode ? '#4b5563' : '#e5e7eb'}`,
+    fontSize: '0.875rem',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   };
 
   const actionColumnStyles = {
-    width: '120px' // Largura fixa para coluna de ações
+    width: '100px' // Largura fixa para coluna de ações
   };
 
   const buttonStyles = {
@@ -384,7 +389,8 @@ function App() {
     border: 'none',
     cursor: 'pointer',
     backgroundColor: darkMode ? '#2563eb' : '#3b82f6',
-    color: 'white'
+    color: 'white',
+    fontSize: '0.875rem'
   };
 
   const inputStyles = {
@@ -393,7 +399,17 @@ function App() {
     border: `1px solid ${darkMode ? '#4b5563' : '#d1d5db'}`,
     backgroundColor: darkMode ? '#1f2937' : 'white',
     color: darkMode ? 'white' : 'black',
-    width: '100%'
+    width: '100%',
+    fontSize: '0.875rem'
+  };
+
+  const cardStyles = {
+    padding: '1rem',
+    borderRadius: '0.75rem',
+    backgroundColor: darkMode ? '#1f2937' : 'white',
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+    marginBottom: '1rem',
+    minHeight: '150px'
   };
   
   return (
@@ -403,10 +419,13 @@ function App() {
       color: darkMode ? 'white' : 'black'
     }}>
       <header style={{ 
-        padding: '1rem',
+        padding: '0.75rem',
         backgroundColor: darkMode ? '#1f2937' : '#2563eb',
         color: 'white',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10
       }}>
         <div style={{ 
           maxWidth: '1200px',
@@ -415,7 +434,7 @@ function App() {
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Sítio do Toninho</h1>
+          <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Sítio do Toninho</h1>
           <button 
             onClick={() => setDarkMode(!darkMode)}
             style={{ 
@@ -441,9 +460,22 @@ function App() {
         onChange={importData} 
       />
       
-      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem' }}>
-        {/* Tabs */}
-        <div style={{ display: 'flex', marginBottom: '1rem', borderBottom: '1px solid #ccc' }}>
+      <main style={{ 
+        maxWidth: '1200px', 
+        margin: '0 auto', 
+        padding: '0.75rem',
+        paddingBottom: '5rem' // Espaço para o footer
+      }}>
+        {/* Tabs - Fixo no topo em dispositivos móveis */}
+        <div style={{ 
+          display: 'flex', 
+          marginBottom: '1rem', 
+          borderBottom: `1px solid ${darkMode ? '#374151' : '#d1d5db'}`,
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          scrollbarWidth: 'none', // Firefox
+          msOverflowStyle: 'none', // IE/Edge
+        }}>
           <button 
             style={{ 
               padding: '0.5rem 1rem',
@@ -451,7 +483,8 @@ function App() {
               color: activeTab === 'dashboard' ? '#3b82f6' : darkMode ? '#9ca3af' : '#4b5563',
               background: 'none',
               border: 'none',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              whiteSpace: 'nowrap'
             }}
             onClick={() => setActiveTab('dashboard')}
           >
@@ -464,7 +497,8 @@ function App() {
               color: activeTab === 'reservations' ? '#3b82f6' : darkMode ? '#9ca3af' : '#4b5563',
               background: 'none',
               border: 'none',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              whiteSpace: 'nowrap'
             }}
             onClick={() => setActiveTab('reservations')}
           >
@@ -477,7 +511,8 @@ function App() {
               color: activeTab === 'expenses' ? '#3b82f6' : darkMode ? '#9ca3af' : '#4b5563',
               background: 'none',
               border: 'none',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              whiteSpace: 'nowrap'
             }}
             onClick={() => setActiveTab('expenses')}
           >
@@ -486,103 +521,101 @@ function App() {
         </div>
         
         {/* Conteúdo com altura mínima fixa */}
-        <div style={{ minHeight: 'calc(100vh - 250px)' }}>
+        <div style={{ minHeight: 'calc(100vh - 200px)' }}>
           {/* Dashboard Tab */}
           {activeTab === 'dashboard' && (
             <div>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '1.5rem' }}>Dashboard Financeiro</h2>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>Dashboard Financeiro</h2>
               
-              {/* Cards de resumo com tamanho maior */}
+              {/* Cards de resumo responsivos */}
               <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-                gap: '1.5rem',
-                marginBottom: '2rem'
+                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+                gap: '1rem',
+                marginBottom: '1.5rem'
               }}>
-                <div style={{ 
-                  padding: '1.5rem', 
-                  borderRadius: '0.75rem', 
-                  backgroundColor: darkMode ? '#1f2937' : 'white',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                  minHeight: '150px'
-                }}>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '1rem' }}>Receita Total</h3>
-                  <p style={{ fontSize: '2rem', fontWeight: '700', color: '#10b981' }}>
+                <div style={cardStyles}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: '500', marginBottom: '0.75rem' }}>Receita Total</h3>
+                  <p style={{ fontSize: '1.5rem', fontWeight: '700', color: '#10b981' }}>
                     R$ {totalIncome.toFixed(2)}
                   </p>
-                  <p style={{ marginTop: '0.5rem', color: darkMode ? '#9ca3af' : '#6b7280' }}>
+                  <p style={{ marginTop: '0.5rem', color: darkMode ? '#9ca3af' : '#6b7280', fontSize: '0.875rem' }}>
                     {reservations.filter(r => r.paid).length} reservas pagas
                   </p>
                 </div>
                 
-                <div style={{ 
-                  padding: '1.5rem', 
-                  borderRadius: '0.75rem', 
-                  backgroundColor: darkMode ? '#1f2937' : 'white',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                  minHeight: '150px'
-                }}>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '1rem' }}>Despesas Totais</h3>
-                  <p style={{ fontSize: '2rem', fontWeight: '700', color: '#ef4444' }}>
+                <div style={cardStyles}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: '500', marginBottom: '0.75rem' }}>Despesas Totais</h3>
+                  <p style={{ fontSize: '1.5rem', fontWeight: '700', color: '#ef4444' }}>
                     R$ {totalExpenses.toFixed(2)}
                   </p>
-                  <p style={{ marginTop: '0.5rem', color: darkMode ? '#9ca3af' : '#6b7280' }}>
+                  <p style={{ marginTop: '0.5rem', color: darkMode ? '#9ca3af' : '#6b7280', fontSize: '0.875rem' }}>
                     {expenses.length} despesas registradas
                   </p>
                 </div>
                 
-                <div style={{ 
-                  padding: '1.5rem', 
-                  borderRadius: '0.75rem', 
-                  backgroundColor: darkMode ? '#1f2937' : 'white',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                  minHeight: '150px'
-                }}>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '1rem' }}>Lucro</h3>
+                <div style={cardStyles}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: '500', marginBottom: '0.75rem' }}>Lucro</h3>
                   <p style={{ 
-                    fontSize: '2rem', 
+                    fontSize: '1.5rem', 
                     fontWeight: '700', 
                     color: totalProfit >= 0 ? '#10b981' : '#ef4444'
                   }}>
                     R$ {totalProfit.toFixed(2)}
                   </p>
-                  <p style={{ marginTop: '0.5rem', color: darkMode ? '#9ca3af' : '#6b7280' }}>
+                  <p style={{ marginTop: '0.5rem', color: darkMode ? '#9ca3af' : '#6b7280', fontSize: '0.875rem' }}>
                     Margem: {totalIncome > 0 ? Math.round((totalProfit / totalIncome) * 100) : 0}%
                   </p>
                 </div>
               </div>
               
-              {/* Gráfico com altura maior */}
+              {/* Gráfico responsivo */}
               <div style={{ 
-                padding: '1.5rem', 
-                borderRadius: '0.75rem', 
-                backgroundColor: darkMode ? '#1f2937' : 'white',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                marginBottom: '2rem'
+                ...cardStyles,
+                marginBottom: '1.5rem',
+                minHeight: '300px'
               }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '1.5rem' }}>Receitas e Despesas por Mês</h3>
+                <h3 style={{ fontSize: '1rem', fontWeight: '500', marginBottom: '1rem' }}>Receitas e Despesas por Mês</h3>
                 
-                <div style={{ height: '400px' }}>
+                <div style={{ height: '300px' }}>
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartData}>
                       <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#374151' : '#e5e7eb'} />
                       <XAxis 
                         dataKey="name" 
-                        tick={{ fill: darkMode ? '#e5e7eb' : '#4b5563' }}
+                        tick={{ fill: darkMode ? '#e5e7eb' : '#4b5563', fontSize: '0.75rem' }}
                         axisLine={{ stroke: darkMode ? '#4b5563' : '#9ca3af' }}
+                        tickFormatter={(value) => {
+                          // Abreviar o nome do mês para telas pequenas
+                          const parts = value.split('/');
+                          if (parts.length === 2) {
+                            const month = parts[0].substring(0, 3);
+                            return `${month}/${parts[1]}`;
+                          }
+                          return value;
+                        }}
                       />
                       <YAxis 
-                        tick={{ fill: darkMode ? '#e5e7eb' : '#4b5563' }}
+                        tick={{ fill: darkMode ? '#e5e7eb' : '#4b5563', fontSize: '0.75rem' }}
                         axisLine={{ stroke: darkMode ? '#4b5563' : '#9ca3af' }}
+                        tickFormatter={(value) => {
+                          // Abreviar valores grandes
+                          if (value >= 1000) {
+                            return `${(value / 1000).toFixed(1)}k`;
+                          }
+                          return value;
+                        }}
                       />
                       <Tooltip 
                         contentStyle={{ 
                           backgroundColor: darkMode ? '#1f2937' : 'white',
                           borderColor: darkMode ? '#374151' : '#e5e7eb',
-                          color: darkMode ? 'white' : 'black'
+                          color: darkMode ? 'white' : 'black',
+                          fontSize: '0.75rem'
                         }}
+                        formatter={(value) => [`R$ ${value.toFixed(2)}`, null]}
                       />
-                      <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                      <Legend wrapperStyle={{ paddingTop: '10px', fontSize: '0.75rem' }} />
                       <Bar dataKey="receita" fill="#10b981" name="Receita" radius={[4, 4, 0, 0]} />
                       <Bar dataKey="despesa" fill="#ef4444" name="Despesa" radius={[4, 4, 0, 0]} />
                       <Bar dataKey="lucro" fill="#3b82f6" name="Lucro" radius={[4, 4, 0, 0]} />
@@ -593,15 +626,13 @@ function App() {
               
               {/* Próximas reservas */}
               <div style={{ 
-                padding: '1.5rem', 
-                borderRadius: '0.75rem', 
-                backgroundColor: darkMode ? '#1f2937' : 'white',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                marginBottom: '2rem'
+                ...cardStyles,
+                marginBottom: '1.5rem',
+                minHeight: '200px'
               }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: '500', marginBottom: '1.5rem' }}>Próximas Reservas</h3>
+                <h3 style={{ fontSize: '1rem', fontWeight: '500', marginBottom: '1rem' }}>Próximas Reservas</h3>
                 
-                <div style={{ minHeight: '150px' }}>
+                <div>
                   {reservations
                     .filter(r => new Date(r.date) >= new Date())
                     .sort((a, b) => new Date(a.date) - new Date(b.date))
@@ -610,31 +641,39 @@ function App() {
                       <div 
                         key={reservation.id}
                         style={{
-                          padding: '1rem',
+                          padding: '0.75rem',
                           borderLeft: '4px solid #3b82f6',
                           backgroundColor: darkMode ? '#374151' : '#f3f4f6',
-                          marginBottom: '1rem',
+                          marginBottom: '0.75rem',
                           borderRadius: '0 0.5rem 0.5rem 0'
                         }}
                       >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div>
-                            <h4 style={{ fontWeight: '600', marginBottom: '0.5rem' }}>{reservation.name}</h4>
-                            <p style={{ color: darkMode ? '#9ca3af' : '#6b7280' }}>
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between', 
+                          alignItems: 'flex-start',
+                          flexWrap: 'wrap',
+                          gap: '0.5rem'
+                        }}>
+                          <div style={{ flex: '1 1 60%', minWidth: '150px' }}>
+                            <h4 style={{ fontWeight: '600', marginBottom: '0.25rem', fontSize: '0.875rem' }}>{reservation.name}</h4>
+                            <p style={{ color: darkMode ? '#9ca3af' : '#6b7280', fontSize: '0.75rem' }}>
                               {new Date(reservation.date).toLocaleDateString('pt-BR')} 
                               {reservation.endDate ? ` até ${new Date(reservation.endDate).toLocaleDateString('pt-BR')}` : ''}
                             </p>
                           </div>
-                          <div>
-                            <p style={{ fontWeight: '600', color: reservation.paid ? '#10b981' : '#f59e0b' }}>
+                          <div style={{ textAlign: 'right' }}>
+                            <p style={{ fontWeight: '600', color: reservation.paid ? '#10b981' : '#f59e0b', fontSize: '0.875rem' }}>
                               R$ {Number(reservation.value).toFixed(2)}
                             </p>
                             <span style={{ 
-                              padding: '0.25rem 0.5rem', 
+                              padding: '0.125rem 0.375rem', 
                               borderRadius: '9999px', 
-                              fontSize: '0.75rem',
+                              fontSize: '0.625rem',
                               backgroundColor: reservation.paid ? '#dcfce7' : '#fef9c3',
-                              color: reservation.paid ? '#166534' : '#854d0e'
+                              color: reservation.paid ? '#166534' : '#854d0e',
+                              display: 'inline-block',
+                              marginTop: '0.25rem'
                             }}>
                               {reservation.paid ? 'Pago' : 'Pendente'}
                             </span>
@@ -644,7 +683,7 @@ function App() {
                     ))}
                     
                   {reservations.filter(r => new Date(r.date) >= new Date()).length === 0 && (
-                    <p style={{ textAlign: 'center', color: darkMode ? '#9ca3af' : '#6b7280', padding: '2rem' }}>
+                    <p style={{ textAlign: 'center', color: darkMode ? '#9ca3af' : '#6b7280', padding: '1.5rem', fontSize: '0.875rem' }}>
                       Não há reservas futuras
                     </p>
                   )}
@@ -653,13 +692,11 @@ function App() {
               
               {/* Calendário integrado no Dashboard */}
               <div style={{ 
-                padding: '1.5rem', 
-                borderRadius: '0.75rem', 
-                backgroundColor: darkMode ? '#1f2937' : 'white',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                ...cardStyles,
+                minHeight: '300px'
               }}>
-                <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: '500' }}>
+                <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: '500' }}>
                     Calendário: {new Date().toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}
                   </h3>
                 </div>
@@ -667,13 +704,14 @@ function App() {
                 <div style={{ 
                   display: 'grid', 
                   gridTemplateColumns: 'repeat(7, 1fr)', 
-                  gap: '0.5rem'
+                  gap: '0.25rem',
+                  fontSize: '0.75rem'
                 }}>
-                  {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
+                  {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map(day => (
                     <div key={day} style={{ 
                       textAlign: 'center', 
                       fontWeight: '500', 
-                      padding: '0.75rem',
+                      padding: '0.5rem 0',
                       color: darkMode ? '#9ca3af' : '#6b7280'
                     }}>
                       {day}
@@ -682,18 +720,18 @@ function App() {
                   
                   {/* Espaços vazios para alinhar o primeiro dia do mês */}
                   {Array.from({ length: new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay() }).map((_, i) => (
-                    <div key={`empty-${i}`} style={{ height: '3.5rem' }}></div>
+                    <div key={`empty-${i}`} style={{ height: '2.5rem' }}></div>
                   ))}
                   
                   {calendarDays.map(day => (
                     <div 
                       key={day.day}
                       style={{ 
-                        height: '3.5rem', 
+                        height: '2.5rem', 
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center', 
-                        borderRadius: '0.5rem',
+                        borderRadius: '0.25rem',
                         backgroundColor: day.hasReservation ? 
                           (darkMode ? '#1e3a8a' : '#dbeafe') : 
                           (darkMode ? '#374151' : '#f9fafb'),
@@ -703,7 +741,8 @@ function App() {
                         border: new Date().getDate() === day.day ? 
                           (darkMode ? '2px solid #facc15' : '2px solid #3b82f6') : 
                           'none',
-                        fontWeight: day.hasReservation ? '600' : 'normal'
+                        fontWeight: day.hasReservation ? '600' : 'normal',
+                        fontSize: '0.75rem'
                       }}
                     >
                       {day.day}
@@ -711,23 +750,31 @@ function App() {
                   ))}
                 </div>
                 
-                <div style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ 
+                  marginTop: '1rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  flexWrap: 'wrap',
+                  gap: '0.5rem',
+                  fontSize: '0.75rem'
+                }}>
                   <div style={{ 
-                    width: '1rem', 
-                    height: '1rem', 
+                    width: '0.75rem', 
+                    height: '0.75rem', 
                     borderRadius: '9999px', 
                     backgroundColor: darkMode ? '#1e3a8a' : '#dbeafe',
-                    marginRight: '0.5rem'
+                    marginRight: '0.25rem'
                   }}></div>
                   <span>Dias com reservas</span>
                   
                   <div style={{ 
-                    width: '1rem', 
-                    height: '1rem', 
+                    width: '0.75rem', 
+                    height: '0.75rem', 
                     borderRadius: '9999px', 
                     border: darkMode ? '2px solid #facc15' : '2px solid #3b82f6',
-                    marginLeft: '1.5rem',
-                    marginRight: '0.5rem'
+                    marginLeft: '0.75rem',
+                    marginRight: '0.25rem'
                   }}></div>
                   <span>Dia atual</span>
                 </div>
@@ -742,189 +789,193 @@ function App() {
                 {editingReservation ? 'Editar Reserva' : 'Nova Reserva'}
               </h2>
               
-              <form onSubmit={editingReservation ? updateReservation : addReservation} style={{ marginBottom: '1.5rem' }}>
-                <div style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-                  gap: '1rem'
-                }}>
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.25rem' }}>Nome do Cliente</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={newReservation.name}
-                      onChange={handleReservationChange}
-                      style={inputStyles}
-                      required
-                    />
+              <div style={cardStyles}>
+                <form onSubmit={editingReservation ? updateReservation : addReservation} style={{ marginBottom: '1rem' }}>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+                    gap: '0.75rem'
+                  }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Nome do Cliente</label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={newReservation.name}
+                        onChange={handleReservationChange}
+                        style={inputStyles}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Data de Entrada</label>
+                      <input
+                        type="date"
+                        name="date"
+                        value={newReservation.date}
+                        onChange={handleReservationChange}
+                        style={inputStyles}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Data de Saída</label>
+                      <input
+                        type="date"
+                        name="endDate"
+                        value={newReservation.endDate}
+                        onChange={handleReservationChange}
+                        style={inputStyles}
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Valor (R$)</label>
+                      <input
+                        type="number"
+                        name="value"
+                        value={newReservation.value}
+                        onChange={handleReservationChange}
+                        style={inputStyles}
+                        required
+                      />
+                    </div>
                   </div>
                   
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.25rem' }}>Data de Entrada</label>
-                    <input
-                      type="date"
-                      name="date"
-                      value={newReservation.date}
-                      onChange={handleReservationChange}
-                      style={inputStyles}
-                      required
-                    />
+                  <div style={{ marginTop: '0.75rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+                      <input
+                        type="checkbox"
+                        name="paid"
+                        checked={newReservation.paid}
+                        onChange={handleReservationChange}
+                        style={{ marginRight: '0.5rem' }}
+                        id="paid-checkbox"
+                      />
+                      <label htmlFor="paid-checkbox" style={{ fontSize: '0.875rem' }}>Pagamento Recebido</label>
+                    </div>
+                    
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <button 
+                        type="submit" 
+                        style={{
+                          ...buttonStyles,
+                          backgroundColor: darkMode ? '#2563eb' : '#3b82f6'
+                        }}
+                      >
+                        {editingReservation ? 'Atualizar Reserva' : 'Adicionar Reserva'}
+                      </button>
+                      
+                      {editingReservation && (
+                        <button 
+                          type="button" 
+                          style={{
+                            ...buttonStyles,
+                            backgroundColor: '#6b7280'
+                          }}
+                          onClick={() => {
+                            setEditingReservation(null);
+                            setNewReservation({
+                              name: '',
+                              date: '',
+                              endDate: '',
+                              value: '',
+                              paid: false
+                            });
+                          }}
+                        >
+                          Cancelar
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.25rem' }}>Data de Saída</label>
-                    <input
-                      type="date"
-                      name="endDate"
-                      value={newReservation.endDate}
-                      onChange={handleReservationChange}
-                      style={inputStyles}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.25rem' }}>Valor (R$)</label>
-                    <input
-                      type="number"
-                      name="value"
-                      value={newReservation.value}
-                      onChange={handleReservationChange}
-                      style={inputStyles}
-                      required
-                    />
-                  </div>
-                  
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <input
-                      type="checkbox"
-                      name="paid"
-                      checked={newReservation.paid}
-                      onChange={handleReservationChange}
-                      style={{ marginRight: '0.5rem' }}
-                    />
-                    <label>Pagamento Recebido</label>
-                  </div>
-                </div>
-                
-                <div style={{ marginTop: '1rem' }}>
-                  <button 
-                    type="submit" 
-                    style={{
-                      ...buttonStyles,
-                      backgroundColor: darkMode ? '#2563eb' : '#3b82f6'
-                    }}
-                  >
-                    {editingReservation ? 'Atualizar Reserva' : 'Adicionar Reserva'}
-                  </button>
-                  
-                  {editingReservation && (
-                    <button 
-                      type="button" 
-                      style={{
-                        ...buttonStyles,
-                        backgroundColor: '#6b7280',
-                        marginLeft: '0.5rem'
-                      }}
-                      onClick={() => {
-                        setEditingReservation(null);
-                        setNewReservation({
-                          name: '',
-                          date: '',
-                          endDate: '',
-                          value: '',
-                          paid: false
-                        });
-                      }}
-                    >
-                      Cancelar
-                    </button>
-                  )}
-                </div>
-              </form>
-              
-              <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.25rem' }}>Filtrar por mês:</label>
-                <input
-                  type="text"
-                  value={filterMonth}
-                  onChange={(e) => setFilterMonth(e.target.value)}
-                  placeholder="Digite o nome do mês"
-                  style={{
-                    ...inputStyles,
-                    width: '300px'
-                  }}
-                />
+                </form>
               </div>
               
-              {/* Tabela com largura fixa para evitar redimensionamento */}
+              <div style={{ marginTop: '1.5rem', marginBottom: '1rem' }}>
+                <div style={cardStyles}>
+                  <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Filtrar por mês:</label>
+                  <input
+                    type="text"
+                    value={filterMonth}
+                    onChange={(e) => setFilterMonth(e.target.value)}
+                    placeholder="Digite o nome do mês"
+                    style={{
+                      ...inputStyles,
+                      maxWidth: '300px'
+                    }}
+                  />
+                </div>
+              </div>
+              
+              {/* Tabela responsiva */}
               <div style={{ 
+                ...cardStyles,
+                padding: '0.5rem',
                 overflowX: 'auto',
-                backgroundColor: darkMode ? '#1f2937' : 'white',
-                borderRadius: '0.5rem',
-                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+                minHeight: '300px'
               }}>
-                <div style={{ minHeight: '300px' }}> {/* Altura mínima fixa */}
-                  <table style={tableStyles}>
-                    <thead>
-                      <tr>
-                        <th style={thStyles}>Nome</th>
-                        <th style={thStyles}>Entrada</th>
-                        <th style={thStyles}>Saída</th>
-                        <th style={thStyles}>Valor</th>
-                        <th style={thStyles}>Status</th>
-                        <th style={{...thStyles, ...actionColumnStyles}}>Ações</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredReservations.length > 0 ? (
-                        filteredReservations.map(reservation => (
-                          <tr key={reservation.id}>
-                            <td style={tdStyles}>{reservation.name}</td>
-                            <td style={tdStyles}>{new Date(reservation.date).toLocaleDateString('pt-BR')}</td>
-                            <td style={tdStyles}>
-                              {reservation.endDate ? new Date(reservation.endDate).toLocaleDateString('pt-BR') : '-'}
-                            </td>
-                            <td style={tdStyles}>R$ {Number(reservation.value).toFixed(2)}</td>
-                            <td style={tdStyles}>
-                              <span style={{ 
-                                padding: '0.25rem 0.5rem', 
-                                borderRadius: '9999px', 
-                                fontSize: '0.75rem',
-                                backgroundColor: reservation.paid ? '#dcfce7' : '#fef9c3',
-                                color: reservation.paid ? '#166534' : '#854d0e'
-                              }}>
-                                {reservation.paid ? 'Pago' : 'Pendente'}
-                              </span>
-                            </td>
-                            <td style={{...tdStyles, ...actionColumnStyles}}>
-                              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                <button 
-                                  onClick={() => startEditReservation(reservation.id)}
-                                  style={{ color: '#3b82f6', background: 'none', border: 'none', cursor: 'pointer' }}
-                                >
-                                  Editar
-                                </button>
-                                <button 
-                                  onClick={() => deleteReservation(reservation.id)}
-                                  style={{ color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer' }}
-                                >
-                                  Excluir
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="6" style={{ ...tdStyles, textAlign: 'center', color: '#6b7280', padding: '1rem' }}>
-                            Nenhuma reserva encontrada
+                <table style={tableStyles}>
+                  <thead>
+                    <tr>
+                      <th style={thStyles}>Nome</th>
+                      <th style={thStyles}>Entrada</th>
+                      <th style={thStyles}>Saída</th>
+                      <th style={thStyles}>Valor</th>
+                      <th style={thStyles}>Status</th>
+                      <th style={{...thStyles, ...actionColumnStyles}}>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredReservations.length > 0 ? (
+                      filteredReservations.map(reservation => (
+                        <tr key={reservation.id}>
+                          <td style={tdStyles}>{reservation.name}</td>
+                          <td style={tdStyles}>{new Date(reservation.date).toLocaleDateString('pt-BR')}</td>
+                          <td style={tdStyles}>
+                            {reservation.endDate ? new Date(reservation.endDate).toLocaleDateString('pt-BR') : '-'}
+                          </td>
+                          <td style={tdStyles}>R$ {Number(reservation.value).toFixed(2)}</td>
+                          <td style={tdStyles}>
+                            <span style={{ 
+                              padding: '0.125rem 0.375rem', 
+                              borderRadius: '9999px', 
+                              fontSize: '0.625rem',
+                              backgroundColor: reservation.paid ? '#dcfce7' : '#fef9c3',
+                              color: reservation.paid ? '#166534' : '#854d0e'
+                            }}>
+                              {reservation.paid ? 'Pago' : 'Pendente'}
+                            </span>
+                          </td>
+                          <td style={{...tdStyles, ...actionColumnStyles}}>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                              <button 
+                                onClick={() => startEditReservation(reservation.id)}
+                                style={{ color: '#3b82f6', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.75rem' }}
+                              >
+                                Editar
+                              </button>
+                              <button 
+                                onClick={() => deleteReservation(reservation.id)}
+                                style={{ color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.75rem' }}
+                              >
+                                Excluir
+                              </button>
+                            </div>
                           </td>
                         </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="6" style={{ ...tdStyles, textAlign: 'center', color: '#6b7280', padding: '1rem' }}>
+                          Nenhuma reserva encontrada
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
@@ -934,141 +985,142 @@ function App() {
             <div>
               <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>Nova Despesa</h2>
               
-              <form onSubmit={addExpense} style={{ marginBottom: '1.5rem' }}>
-                <div style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-                  gap: '1rem'
-                }}>
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.25rem' }}>Descrição</label>
-                    <input
-                      type="text"
-                      name="description"
-                      value={newExpense.description}
-                      onChange={handleExpenseChange}
-                      style={inputStyles}
-                      required
-                    />
+              <div style={cardStyles}>
+                <form onSubmit={addExpense} style={{ marginBottom: '1rem' }}>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+                    gap: '0.75rem'
+                  }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Descrição</label>
+                      <input
+                        type="text"
+                        name="description"
+                        value={newExpense.description}
+                        onChange={handleExpenseChange}
+                        style={inputStyles}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Data</label>
+                      <input
+                        type="date"
+                        name="date"
+                        value={newExpense.date}
+                        onChange={handleExpenseChange}
+                        style={inputStyles}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Valor (R$)</label>
+                      <input
+                        type="number"
+                        name="value"
+                        value={newExpense.value}
+                        onChange={handleExpenseChange}
+                        style={inputStyles}
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.875rem' }}>Categoria</label>
+                      <select
+                        name="category"
+                        value={newExpense.category}
+                        onChange={handleExpenseChange}
+                        style={inputStyles}
+                      >
+                        <option value="Manutenção">Manutenção</option>
+                        <option value="Piscina">Piscina</option>
+                        <option value="Limpeza">Limpeza</option>
+                        <option value="Jardinagem">Jardinagem</option>
+                        <option value="Outros">Outros</option>
+                      </select>
+                    </div>
                   </div>
                   
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.25rem' }}>Data</label>
-                    <input
-                      type="date"
-                      name="date"
-                      value={newExpense.date}
-                      onChange={handleExpenseChange}
-                      style={inputStyles}
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.25rem' }}>Valor (R$)</label>
-                    <input
-                      type="number"
-                      name="value"
-                      value={newExpense.value}
-                      onChange={handleExpenseChange}
-                      style={inputStyles}
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.25rem' }}>Categoria</label>
-                    <select
-                      name="category"
-                      value={newExpense.category}
-                      onChange={handleExpenseChange}
-                      style={inputStyles}
+                  <div style={{ marginTop: '1rem' }}>
+                    <button 
+                      type="submit" 
+                      style={buttonStyles}
                     >
-                      <option value="Manutenção">Manutenção</option>
-                      <option value="Piscina">Piscina</option>
-                      <option value="Limpeza">Limpeza</option>
-                      <option value="Jardinagem">Jardinagem</option>
-                      <option value="Outros">Outros</option>
-                    </select>
+                      Adicionar Despesa
+                    </button>
                   </div>
-                </div>
-                
-                <div style={{ marginTop: '1rem' }}>
-                  <button 
-                    type="submit" 
-                    style={buttonStyles}
-                  >
-                    Adicionar Despesa
-                  </button>
-                </div>
-              </form>
+                </form>
+              </div>
               
-              {/* Tabela com largura fixa para evitar redimensionamento */}
+              {/* Tabela responsiva */}
               <div style={{ 
+                ...cardStyles,
+                marginTop: '1.5rem',
+                padding: '0.5rem',
                 overflowX: 'auto',
-                backgroundColor: darkMode ? '#1f2937' : 'white',
-                borderRadius: '0.5rem',
-                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+                minHeight: '300px'
               }}>
-                <div style={{ minHeight: '300px' }}> {/* Altura mínima fixa */}
-                  <table style={tableStyles}>
-                    <thead>
-                      <tr>
-                        <th style={thStyles}>Descrição</th>
-                        <th style={thStyles}>Data</th>
-                        <th style={thStyles}>Valor</th>
-                        <th style={thStyles}>Categoria</th>
-                        <th style={{...thStyles, width: '80px'}}>Ações</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {expenses.length > 0 ? (
-                        expenses.map(expense => (
-                          <tr key={expense.id}>
-                            <td style={tdStyles}>{expense.description}</td>
-                            <td style={tdStyles}>{new Date(expense.date).toLocaleDateString('pt-BR')}</td>
-                            <td style={tdStyles}>R$ {Number(expense.value).toFixed(2)}</td>
-                            <td style={tdStyles}>
-                              <span style={{ 
-                                padding: '0.25rem 0.5rem', 
-                                borderRadius: '9999px', 
-                                fontSize: '0.75rem',
-                                backgroundColor: 
-                                  expense.category === 'Piscina' ? '#dbeafe' :
-                                  expense.category === 'Manutenção' ? '#ffedd5' :
-                                  expense.category === 'Limpeza' ? '#dcfce7' :
-                                  expense.category === 'Jardinagem' ? '#d1fae5' :
-                                  '#f3f4f6',
-                                color: 
-                                  expense.category === 'Piscina' ? '#1e40af' :
-                                  expense.category === 'Manutenção' ? '#9a3412' :
-                                  expense.category === 'Limpeza' ? '#166534' :
-                                  expense.category === 'Jardinagem' ? '#065f46' :
-                                  '#1f2937'
-                              }}>
-                                {expense.category}
-                              </span>
-                            </td>
-                            <td style={{...tdStyles, width: '80px'}}>
-                              <button 
-                                onClick={() => deleteExpense(expense.id)}
-                                style={{ color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer' }}
-                              >
-                                Excluir
-                              </button>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="5" style={{ ...tdStyles, textAlign: 'center', color: '#6b7280', padding: '1rem' }}>
-                            Nenhuma despesa encontrada
+                <table style={tableStyles}>
+                  <thead>
+                    <tr>
+                      <th style={thStyles}>Descrição</th>
+                      <th style={thStyles}>Data</th>
+                      <th style={thStyles}>Valor</th>
+                      <th style={thStyles}>Categoria</th>
+                      <th style={{...thStyles, width: '80px'}}>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {expenses.length > 0 ? (
+                      expenses.map(expense => (
+                        <tr key={expense.id}>
+                          <td style={tdStyles}>{expense.description}</td>
+                          <td style={tdStyles}>{new Date(expense.date).toLocaleDateString('pt-BR')}</td>
+                          <td style={tdStyles}>R$ {Number(expense.value).toFixed(2)}</td>
+                          <td style={tdStyles}>
+                            <span style={{ 
+                              padding: '0.125rem 0.375rem', 
+                              borderRadius: '9999px', 
+                              fontSize: '0.625rem',
+                              backgroundColor: 
+                                expense.category === 'Piscina' ? '#dbeafe' :
+                                expense.category === 'Manutenção' ? '#ffedd5' :
+                                expense.category === 'Limpeza' ? '#dcfce7' :
+                                expense.category === 'Jardinagem' ? '#d1fae5' :
+                                '#f3f4f6',
+                              color: 
+                                expense.category === 'Piscina' ? '#1e40af' :
+                                expense.category === 'Manutenção' ? '#9a3412' :
+                                expense.category === 'Limpeza' ? '#166534' :
+                                expense.category === 'Jardinagem' ? '#065f46' :
+                                '#1f2937'
+                            }}>
+                              {expense.category}
+                            </span>
+                          </td>
+                          <td style={{...tdStyles, width: '80px'}}>
+                            <button 
+                              onClick={() => deleteExpense(expense.id)}
+                              style={{ color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.75rem' }}
+                            >
+                              Excluir
+                            </button>
                           </td>
                         </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="5" style={{ ...tdStyles, textAlign: 'center', color: '#6b7280', padding: '1rem' }}>
+                          Nenhuma despesa encontrada
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
@@ -1076,9 +1128,13 @@ function App() {
       </main>
       
       <footer style={{ 
-        marginTop: '2rem', 
-        padding: '1rem', 
-        backgroundColor: darkMode ? '#1f2937' : '#e5e7eb'
+        padding: '0.75rem', 
+        backgroundColor: darkMode ? '#1f2937' : '#e5e7eb',
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 10
       }}>
         <div style={{ 
           maxWidth: '1200px', 
@@ -1087,15 +1143,15 @@ function App() {
           justifyContent: 'space-between', 
           alignItems: 'center',
           flexWrap: 'wrap',
-          gap: '1rem'
+          gap: '0.5rem'
         }}>
-          <p>© 2025 Sítio do Toninho - App de Gestão</p>
+          <p style={{ fontSize: '0.75rem' }}>© 2025 Sítio do Toninho</p>
           
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
             <button 
               onClick={exportData}
               style={{
-                padding: '0.5rem 1rem',
+                padding: '0.375rem 0.75rem',
                 borderRadius: '0.375rem',
                 backgroundColor: darkMode ? '#374151' : '#e5e7eb',
                 color: darkMode ? 'white' : 'black',
@@ -1103,17 +1159,18 @@ function App() {
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.25rem',
+                fontSize: '0.75rem'
               }}
             >
-              <span style={{ fontSize: '1.25rem' }}>💾</span>
-              Exportar Dados
+              <span>💾</span>
+              Exportar
             </button>
             
             <button 
               onClick={() => fileInputRef.current.click()}
               style={{
-                padding: '0.5rem 1rem',
+                padding: '0.375rem 0.75rem',
                 borderRadius: '0.375rem',
                 backgroundColor: darkMode ? '#374151' : '#e5e7eb',
                 color: darkMode ? 'white' : 'black',
@@ -1121,11 +1178,12 @@ function App() {
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
+                gap: '0.25rem',
+                fontSize: '0.75rem'
               }}
             >
-              <span style={{ fontSize: '1.25rem' }}>📂</span>
-              Importar Dados
+              <span>📂</span>
+              Importar
             </button>
           </div>
         </div>
