@@ -32,7 +32,6 @@ function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [darkMode, setDarkMode] = useState(true);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [showSidebar, setShowSidebar] = useState(false);
 
   // Estados para formulários
   const [newReservation, setNewReservation] = useState({
@@ -579,23 +578,21 @@ function App() {
       <nav style={{ 
         backgroundColor: darkMode ? '#0f172a' : '#f1f5f9',
         borderBottom: `1px solid ${darkMode ? '#334155' : '#e2e8f0'}`,
-        padding: '0 0.5rem'
       }}>
         <ul style={{ 
           listStyle: 'none', 
           padding: 0, 
           margin: 0,
           display: 'flex',
-          overflowX: 'auto'
         }}>
-          <li style={{ margin: '0 0.5rem 0 0' }}>
+          <li>
             <button 
               onClick={() => setActiveTab('dashboard')}
               style={{ 
                 display: 'block',
                 padding: '0.75rem 1rem',
                 textAlign: 'center',
-                backgroundColor: 'transparent',
+                backgroundColor: activeTab === 'dashboard' ? '#1e293b' : 'transparent',
                 color: activeTab === 'dashboard' ? '#3b82f6' : darkMode ? '#94a3b8' : '#64748b',
                 border: 'none',
                 borderBottom: activeTab === 'dashboard' ? '2px solid #3b82f6' : 'none',
@@ -607,7 +604,7 @@ function App() {
               Dashboard
             </button>
           </li>
-          <li style={{ margin: '0 0.5rem 0 0' }}>
+          <li>
             <button 
               onClick={() => setActiveTab('reservations')}
               style={{ 
@@ -651,23 +648,28 @@ function App() {
       {/* Conteúdo principal */}
       <div className="main-content" style={{ 
         flex: 1,
-        padding: '1rem',
         backgroundColor: darkMode ? '#0f172a' : '#f1f5f9',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        width: '100%'
       }}>
         {/* Dashboard Tab */}
         {activeTab === 'dashboard' && (
-          <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: 0, marginBottom: '1rem' }}>Dashboard Financeiro</h2>
+          <div style={{ width: '100%' }}>
+            <div style={{ padding: '1rem' }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: 0, marginBottom: '1rem' }}>Dashboard Financeiro</h2>
+            </div>
 
-            {/* Cards financeiros */}
+            {/* Cards financeiros em grid de 2 colunas */}
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', 
+              gridTemplateColumns: 'repeat(2, 1fr)', 
               gap: '0.5rem',
-              marginBottom: '1rem'
-            }} className="responsive-grid">
-              <div style={cardStyles}>
+              padding: '0 1rem'
+            }}>
+              <div style={{
+                ...cardStyles,
+                backgroundColor: darkMode ? '#1e293b' : 'white',
+              }}>
                 <h3 style={{ fontSize: '0.875rem', fontWeight: '500', marginTop: 0, marginBottom: '0.5rem' }}>Receita Total</h3>
                 <p style={{ fontSize: '1.25rem', fontWeight: '700', color: '#10b981', margin: '0.5rem 0' }}>
                   R$ {totalIncome.toFixed(2)}
@@ -677,7 +679,10 @@ function App() {
                 </p>
               </div>
 
-              <div style={cardStyles}>
+              <div style={{
+                ...cardStyles,
+                backgroundColor: darkMode ? '#1e293b' : 'white',
+              }}>
                 <h3 style={{ fontSize: '0.875rem', fontWeight: '500', marginTop: 0, marginBottom: '0.5rem' }}>Despesas Totais</h3>
                 <p style={{ fontSize: '1.25rem', fontWeight: '700', color: '#ef4444', margin: '0.5rem 0' }}>
                   R$ {totalExpenses.toFixed(2)}
@@ -686,8 +691,14 @@ function App() {
                   {expenses.length} despesas registradas
                 </p>
               </div>
+            </div>
 
-              <div style={cardStyles}>
+            {/* Card de Lucro em linha separada */}
+            <div style={{ padding: '0 1rem' }}>
+              <div style={{
+                ...cardStyles,
+                backgroundColor: darkMode ? '#1e293b' : 'white',
+              }}>
                 <h3 style={{ fontSize: '0.875rem', fontWeight: '500', marginTop: 0, marginBottom: '0.5rem' }}>Lucro</h3>
                 <p style={{ 
                   fontSize: '1.25rem', 
@@ -704,141 +715,147 @@ function App() {
             </div>
 
             {/* Gráfico de receitas e despesas */}
-            <div style={{ 
-              ...cardStyles,
-              marginBottom: '1rem',
-              height: '300px'
-            }}>
-              <h3 style={{ fontSize: '0.875rem', fontWeight: '500', marginTop: 0, marginBottom: '0.75rem' }}>Receitas e Despesas por Mês</h3>
+            <div style={{ padding: '0 1rem' }}>
+              <div style={{ 
+                ...cardStyles,
+                backgroundColor: darkMode ? '#1e293b' : 'white',
+                height: '300px'
+              }}>
+                <h3 style={{ fontSize: '0.875rem', fontWeight: '500', marginTop: 0, marginBottom: '0.75rem' }}>Receitas e Despesas por Mês</h3>
 
-              <ResponsiveContainer width="100%" height="85%">
-                <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#334155' : '#e2e8f0'} />
-                  <XAxis 
-                    dataKey="name" 
-                    tick={{ fill: darkMode ? '#e2e8f0' : '#334155', fontSize: isMobile ? '0.65rem' : '0.75rem' }}
-                    axisLine={{ stroke: darkMode ? '#475569' : '#94a3b8' }}
-                    tickFormatter={(value) => {
-                      // Abreviar o nome do mês para telas pequenas
-                      const parts = value.split('/');
-                      if (parts.length === 2) {
-                        const month = parts[0].substring(0, 3);
-                        return `${month}/${parts[1].substring(2)}`;
-                      }
-                      return value;
-                    }}
-                  />
-                  <YAxis 
-                    tick={{ fill: darkMode ? '#e2e8f0' : '#334155', fontSize: isMobile ? '0.65rem' : '0.75rem' }}
-                    axisLine={{ stroke: darkMode ? '#475569' : '#94a3b8' }}
-                    tickFormatter={(value) => {
-                      // Abreviar valores grandes
-                      if (value >= 1000) {
-                        return `${(value / 1000).toFixed(1)}k`;
-                      }
-                      return value;
-                    }}
-                  />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: darkMode ? '#1e293b' : 'white',
-                      borderColor: darkMode ? '#334155' : '#e2e8f0',
-                      color: darkMode ? 'white' : 'black',
-                      fontSize: '0.75rem'
-                    }}
-                    formatter={(value) => [`R$ ${value.toFixed(2)}`, null]}
-                  />
-                  <Legend 
-                    wrapperStyle={{ fontSize: isMobile ? '0.65rem' : '0.75rem' }} 
-                    iconSize={10}
-                    align="center"
-                    verticalAlign="bottom"
-                  />
-                  <Bar dataKey="receita" fill="#10b981" name="Receita" />
-                  <Bar dataKey="despesa" fill="#ef4444" name="Despesa" />
-                  <Bar dataKey="lucro" fill="#3b82f6" name="Lucro" />
-                </BarChart>
-              </ResponsiveContainer>
+                <ResponsiveContainer width="100%" height="85%">
+                  <BarChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#334155' : '#e2e8f0'} />
+                    <XAxis 
+                      dataKey="name" 
+                      tick={{ fill: darkMode ? '#e2e8f0' : '#334155', fontSize: isMobile ? '0.65rem' : '0.75rem' }}
+                      axisLine={{ stroke: darkMode ? '#475569' : '#94a3b8' }}
+                      tickFormatter={(value) => {
+                        // Abreviar o nome do mês para telas pequenas
+                        const parts = value.split('/');
+                        if (parts.length === 2) {
+                          const month = parts[0].substring(0, 3);
+                          return `${month}/${parts[1].substring(2)}`;
+                        }
+                        return value;
+                      }}
+                    />
+                    <YAxis 
+                      tick={{ fill: darkMode ? '#e2e8f0' : '#334155', fontSize: isMobile ? '0.65rem' : '0.75rem' }}
+                      axisLine={{ stroke: darkMode ? '#475569' : '#94a3b8' }}
+                      tickFormatter={(value) => {
+                        // Abreviar valores grandes
+                        if (value >= 1000) {
+                          return `${(value / 1000).toFixed(1)}k`;
+                        }
+                        return value;
+                      }}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: darkMode ? '#1e293b' : 'white',
+                        borderColor: darkMode ? '#334155' : '#e2e8f0',
+                        color: darkMode ? 'white' : 'black',
+                        fontSize: '0.75rem'
+                      }}
+                      formatter={(value) => [`R$ ${value.toFixed(2)}`, null]}
+                    />
+                    <Legend 
+                      wrapperStyle={{ fontSize: isMobile ? '0.65rem' : '0.75rem' }} 
+                      iconSize={10}
+                      align="center"
+                      verticalAlign="bottom"
+                    />
+                    <Bar dataKey="receita" fill="#10b981" name="Receita" />
+                    <Bar dataKey="despesa" fill="#ef4444" name="Despesa" />
+                    <Bar dataKey="lucro" fill="#3b82f6" name="Lucro" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
 
             {/* Próximas reservas */}
-            <div style={{ 
-              ...cardStyles,
-              marginBottom: '1rem'
-            }}>
-              <h3 style={{ fontSize: '0.875rem', fontWeight: '500', marginTop: 0, marginBottom: '0.75rem' }}>Próximas Reservas</h3>
+            <div style={{ padding: '0 1rem' }}>
+              <div style={{ 
+                ...cardStyles,
+                backgroundColor: darkMode ? '#1e293b' : 'white',
+              }}>
+                <h3 style={{ fontSize: '0.875rem', fontWeight: '500', marginTop: 0, marginBottom: '0.75rem' }}>Próximas Reservas</h3>
 
-              {reservations.filter(r => new Date(r.date) >= new Date()).length > 0 ? (
-                <div>
-                  {reservations
-                    .filter(r => new Date(r.date) >= new Date())
-                    .sort((a, b) => new Date(a.date) - new Date(b.date))
-                    .slice(0, 3)
-                    .map(reservation => (
-                      <div 
-                        key={reservation.id}
-                        style={{
-                          padding: '0.5rem',
-                          borderLeft: '3px solid #3b82f6',
-                          backgroundColor: darkMode ? '#1e293b' : '#f8fafc',
-                          marginBottom: '0.5rem',
-                          borderRadius: '0 0.25rem 0.25rem 0'
-                        }}
-                      >
-                        <div style={{ 
-                          display: 'flex', 
-                          justifyContent: 'space-between', 
-                          alignItems: 'center',
-                          flexWrap: 'wrap',
-                          gap: '0.5rem'
-                        }}>
-                          <div>
-                            <p style={{ fontWeight: '500', margin: '0 0 0.25rem 0', fontSize: '0.875rem' }}>{reservation.name}</p>
-                            <p style={{ color: darkMode ? '#94a3b8' : '#64748b', margin: 0, fontSize: '0.75rem' }}>
-                              {new Date(reservation.date).toLocaleDateString('pt-BR')} 
-                              {reservation.endDate ? ` até ${new Date(reservation.endDate).toLocaleDateString('pt-BR')}` : ''}
-                            </p>
-                          </div>
-                          <div style={{ textAlign: 'right' }}>
-                            <p style={{ fontWeight: '600', color: reservation.paid ? '#10b981' : '#f59e0b', margin: '0 0 0.25rem 0', fontSize: '0.875rem' }}>
-                              R$ {Number(reservation.value).toFixed(2)}
-                            </p>
-                            <span style={{ 
-                              padding: '0.125rem 0.375rem', 
-                              borderRadius: '9999px', 
-                              fontSize: '0.625rem',
-                              backgroundColor: reservation.paid ? '#dcfce7' : '#fef9c3',
-                              color: reservation.paid ? '#166534' : '#854d0e',
-                              display: 'inline-block'
-                            }}>
-                              {reservation.paid ? 'Pago' : 'Pendente'}
-                            </span>
+                {reservations.filter(r => new Date(r.date) >= new Date()).length > 0 ? (
+                  <div>
+                    {reservations
+                      .filter(r => new Date(r.date) >= new Date())
+                      .sort((a, b) => new Date(a.date) - new Date(b.date))
+                      .slice(0, 3)
+                      .map(reservation => (
+                        <div 
+                          key={reservation.id}
+                          style={{
+                            padding: '0.5rem',
+                            borderLeft: '3px solid #3b82f6',
+                            backgroundColor: darkMode ? '#1e293b' : '#f8fafc',
+                            marginBottom: '0.5rem',
+                            borderRadius: '0 0.25rem 0.25rem 0'
+                          }}
+                        >
+                          <div style={{ 
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            alignItems: 'center',
+                            flexWrap: 'wrap',
+                            gap: '0.5rem'
+                          }}>
+                            <div>
+                              <p style={{ fontWeight: '500', margin: '0 0 0.25rem 0', fontSize: '0.875rem' }}>{reservation.name}</p>
+                              <p style={{ color: darkMode ? '#94a3b8' : '#64748b', margin: 0, fontSize: '0.75rem' }}>
+                                {new Date(reservation.date).toLocaleDateString('pt-BR')} 
+                                {reservation.endDate ? ` até ${new Date(reservation.endDate).toLocaleDateString('pt-BR')}` : ''}
+                              </p>
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                              <p style={{ fontWeight: '600', color: reservation.paid ? '#10b981' : '#f59e0b', margin: '0 0 0.25rem 0', fontSize: '0.875rem' }}>
+                                R$ {Number(reservation.value).toFixed(2)}
+                              </p>
+                              <span style={{ 
+                                padding: '0.125rem 0.375rem', 
+                                borderRadius: '9999px', 
+                                fontSize: '0.625rem',
+                                backgroundColor: reservation.paid ? '#dcfce7' : '#fef9c3',
+                                color: reservation.paid ? '#166534' : '#854d0e',
+                                display: 'inline-block'
+                              }}>
+                                {reservation.paid ? 'Pago' : 'Pendente'}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                </div>
-              ) : (
-                <p style={{ 
-                  textAlign: 'center', 
-                  color: darkMode ? '#94a3b8' : '#64748b', 
-                  padding: '1rem', 
-                  margin: 0,
-                  fontSize: '0.875rem' 
-                }}>
-                  Não há reservas futuras
-                </p>
-              )}
+                      ))}
+                  </div>
+                ) : (
+                  <p style={{ 
+                    textAlign: 'center', 
+                    color: darkMode ? '#94a3b8' : '#64748b', 
+                    padding: '1rem', 
+                    margin: 0,
+                    fontSize: '0.875rem' 
+                  }}>
+                    Não há reservas futuras
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Calendário */}
-            {renderCalendar()}
+            <div style={{ padding: '0 1rem 1rem 1rem' }}>
+              {renderCalendar()}
+            </div>
           </div>
         )}
 
         {/* Reservations Tab */}
         {activeTab === 'reservations' && (
-          <div>
+          <div style={{ padding: '1rem' }}>
             <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: 0, marginBottom: '1rem' }}>
               {editingReservation ? 'Editar Reserva' : 'Nova Reserva'}
             </h2>
@@ -1033,7 +1050,7 @@ function App() {
 
         {/* Expenses Tab */}
         {activeTab === 'expenses' && (
-          <div>
+          <div style={{ padding: '1rem' }}>
             <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: 0, marginBottom: '1rem' }}>Nova Despesa</h2>
 
             <div style={cardStyles}>
